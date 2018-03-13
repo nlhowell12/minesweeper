@@ -4,6 +4,13 @@ function Board(rows, columns) {
     this.mines = Math.floor((rows * columns) / 6);
 }
 
+function Cell(row, column, bomb) {
+    this.row = row;
+    this.column = column;
+    this.bomb = bomb;
+}
+
+var boardState = [];
 const boardSize = 8;
 const board = new Board(boardSize, boardSize);
 bombs = 0;
@@ -15,20 +22,26 @@ function drawBoard() {
         row.className = "row"
         var gameArea = document.getElementById('gameArea');
         gameArea.appendChild(row);
+        boardState.push([]);
         for (let x = 0; x < board.width; x++) {
             var cell = document.createElement('td');
             let row = document.getElementById("row" + [i]);
             row.appendChild(cell);
-
-            var randoBomb = Math.floor((Math.random() * 15) + 1);
             
+            var randoBomb = Math.floor((Math.random() * 10) + 1);
+
             if (randoBomb < 3 && bombs < board.mines) {
                 cell.className = "bomb";
                 bombs += 1;
+                boardState[i].push("bomb");
+                
             } else {
                 cell.className = "cell"
+                boardState[i].push(" ");
             }
-            cell.id = "cell" + (x + 1);
+
+            cell.style = "background-color: grey";
+            cell.id = "cell" + (i +1) + (x + 1);
             cell.addEventListener('click', cellClick);
         }
     }
@@ -43,8 +56,10 @@ function countBombs() {
 
 function cellClick() {
     let cell = event.target;
+    console.log(cell)
+    
     if (cell.className === "bomb") {
-        cell.style = "background-color: grey;"
+        cell.style = "background-color: red;"
     }
 }
 
@@ -54,9 +69,7 @@ function reset() {
 
 var timeStart = 0;
 function countTime() {
-    
     document.getElementById("timePassed").innerHTML = timeStart += 1;
-
 }
 var timeElapsed = setInterval(countTime, 1000);
 drawBoard();
