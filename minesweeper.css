@@ -37,10 +37,11 @@
 }
 
 #timePassed {
+    display: flex;
     height: 30px;
     width: 50px;
     border: 1px solid black;
-    margin-right: 20px
+    margin-right: 20px;
 }
 
 #resetButton {

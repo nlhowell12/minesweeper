@@ -48,5 +48,16 @@ function cellClick() {
     }
 }
 
+function reset() {
+    timeStart = 0;
+}
+
+var timeStart = 0;
+function countTime() {
+    
+    document.getElementById("timePassed").innerHTML = timeStart += 1;
+
+}
+var timeElapsed = setInterval(countTime, 1000);
 drawBoard();
 countBombs();
