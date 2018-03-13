@@ -20,7 +20,7 @@ function drawBoard() {
             let row = document.getElementById("row" + [i]);
             row.appendChild(cell);
 
-            var randoBomb = Math.floor((Math.random() * 10) + 1);
+            var randoBomb = Math.floor((Math.random() * 15) + 1);
             
             if (randoBomb < 3 && bombs < board.mines) {
                 cell.className = "bomb";
@@ -43,8 +43,8 @@ function countBombs() {
 
 function cellClick() {
     let cell = event.target;
-    if (cell.id === "bomb") {
-        cell.style = "background-color: white;"
+    if (cell.className === "bomb") {
+        cell.style = "background-color: grey;"
     }
 }
 
