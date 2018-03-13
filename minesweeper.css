@@ -1,0 +1,59 @@
+#gameWrap {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    width: 200px;
+    border: 1px solid black;
+}
+#gameArea {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.row {
+    display: flex;
+    flex-grow: 1;
+}
+
+.cell {
+    flex-grow: 1;
+    border: 1px solid black;
+}
+
+.bomb {
+    flex-grow: 1;
+    border: 1px solid black;
+}
+#upperDisplay {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    border-bottom: 1px solid black;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#timePassed {
+    height: 30px;
+    width: 50px;
+    border: 1px solid black;
+    margin-right: 20px
+}
+
+#resetButton {
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+}
+
+#minesRemaining {
+    height: 30px;
+    width: 50px;
+    border: 1px solid black;
+    margin-left: 20px;
+    text-align: center;    
+}
+
