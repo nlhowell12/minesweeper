@@ -54,10 +54,10 @@ function cellClick() {
 
     checkCells(Number(cell.dataset.y), Number(cell.dataset.x))
 
-    if (cell.className === "cell") {
-        cell.style = "background-color: white;"
+    // if (cell.className === "cell") {
+    //     cell.style = "background-color: white;"
 
-    }
+    // }
 
     if (cell.className === "bomb") {
         cell.style = "background-color: red;"
@@ -109,9 +109,9 @@ function checkCells(y, x) {
 function checkType(cell) {
     console.log (cell.y + "," + cell.x);
     let getCells = document.getElementsByClassName('cell');
-    console.log(getCells)
     for (let i = 0; i < getCells.length; i++) {
-        if (getCells[i].data-y == cell.y) {
+        if (getCells[i].dataset.y == cell.y && getCells[i].dataset.x == cell.x) {
+            getCells[i].style = "background-color: white";
             console.log ("This is a cell");
         }
     }
