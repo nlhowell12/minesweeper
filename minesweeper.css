@@ -14,15 +14,19 @@
 
 .row {
     display: flex;
+    height: 30px;
     flex-grow: 1;
 }
 
 .cell {
     flex-grow: 1;
+    width: 25px;
     border: 1px solid black;
+    text-align:center;
 }
 
 .bomb {
+    width: 25px;
     flex-grow: 1;
     border: 1px solid black;
 }

@@ -4,7 +4,6 @@ function Board(rows, columns) {
     this.mines = Math.floor((rows * columns) / 6);
 }
 
-var boardState = [];
 const boardSize = 8;
 const board = new Board(boardSize, boardSize);
 bombs = 0;
@@ -16,7 +15,7 @@ function drawBoard() {
         row.className = "row"
         var gameArea = document.getElementById('gameArea');
         gameArea.appendChild(row);
-        boardState.push([]);
+
         for (let x = 0; x < board.width; x++) {
             var cell = document.createElement('td');
             let row = document.getElementById("row" + [y]);
@@ -27,12 +26,9 @@ function drawBoard() {
             if (randoBomb < 3 && bombs < board.mines) {
                 cell.className = "bomb";
                 bombs += 1;
-                boardState[y].push("bomb");
 
             } else {
                 cell.className = "cell"
-                
-                boardState[y].push(" ");
             }
             cell.dataset.x = x;
             cell.dataset.y = y;
@@ -51,20 +47,19 @@ function countBombs() {
 
 function cellClick() {
     let cell = event.target;
-
-    checkCells(Number(cell.dataset.y), Number(cell.dataset.x))
-
-    // if (cell.className === "cell") {
-    //     cell.style = "background-color: white;"
-
-    // }
-
+    
     if (cell.className === "bomb") {
         cell.style = "background-color: red;"
+        alert("You done fucked up A-A-Ron!")
+        return;
     }
+
+    getCellCoords(Number(cell.dataset.y), Number(cell.dataset.x))
+
+    
 }
 
-function checkCells(y, x) {
+function getCellCoords(y, x) {
     let cells = [
         {
             x: x,
@@ -107,13 +102,15 @@ function checkCells(y, x) {
 }
 
 function checkType(cell) {
-    console.log (cell.y + "," + cell.x);
     let getCells = document.getElementsByClassName('cell');
+    let adjacentBombs = 0;
+
     for (let i = 0; i < getCells.length; i++) {
         if (getCells[i].dataset.y == cell.y && getCells[i].dataset.x == cell.x) {
             getCells[i].style = "background-color: white";
-            console.log ("This is a cell");
+            // getCells[i].innerHTML = bombCount;
         }
+
     }
 }
 
