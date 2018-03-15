@@ -64,7 +64,8 @@ function addNearbyBombCount() {
 
 function countBombs() {
     let bombCounter = document.getElementById("minesRemaining");
-    bombCounter.innerHTML = bombs.length;
+    let findFlags = document.getElementsByClassName('flag');
+    bombCounter.innerHTML = bombs.length - findFlags.length;
 
 }
 
@@ -97,6 +98,7 @@ function addFlag(event) {
     flag.src = "./images/flag.png";
     flag.className = "flag";
     cell.appendChild(flag);
+    countBombs();
 }
 
 function getCellCoords(y, x) {
