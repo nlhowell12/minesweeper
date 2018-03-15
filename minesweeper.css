@@ -29,12 +29,16 @@ body {
     width: 25px;
     border: 1px solid black;
     text-align:center;
+    /* background-image: url('./images/closed.png');
+    background-size: cover; */
 }
 
 .bomb {
     width: 25px;
     flex-grow: 1;
     border: 1px solid black;
+    /* background-image: url('./images/closed.png');
+    background-size: cover; */
 }
 
 .flag {

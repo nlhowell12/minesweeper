@@ -44,7 +44,7 @@ function drawBoard() {
             }
             cell.dataset.x = x;
             cell.dataset.y = y;
-            cell.style = "background-color: grey;"
+            cell.style = "background-image: url(./images/closed.png); background-size: cover";
             cell.addEventListener('click', revealCells);
             cell.addEventListener('contextmenu', addFlag);
         }
@@ -76,10 +76,10 @@ function revealCells(event) {
         var timeElapsed = setInterval(countTime, 1000);
         firstClick = false;
     } else if (cell.className.includes("bomb")) {
+        cell.style = "background-color: red"
         for (let i = 0; i < bombs.length; i++) {
-            bombs[i].style = "background-color: red";
+            bombs[i].style = "background-image: url('./images/mine.png'); background-size: cover"
         }
-        cell.style = "background-color: red;"
         alert("You done fucked up A-A-Ron!");
         return;
     }
@@ -87,6 +87,7 @@ function revealCells(event) {
     let nearbyCells = getCellCoords(Number(cell.dataset.y), Number(cell.dataset.x));
     
     if (cell.dataset.state === "empty") {
+        cell.style = "backgound-image: none"
     nearbyCells.forEach(markNotBomb);
     }
 }
@@ -94,9 +95,14 @@ function revealCells(event) {
 function addFlag(event) {
     let cell = event.target;
     let flag = document.createElement('img');
+    if (cell.className.includes("flag")) {
+        cell.parentNode.removeChild(cell);
+    }
+    else {
     flag.src = "./images/flag.png";
     flag.className = "flag";
     cell.appendChild(flag);
+    }
     countBombs();
 }
 
