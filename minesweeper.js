@@ -1,34 +1,46 @@
+var gameArea = document.getElementById('gameArea');
+
+var timeStart = 0;
+const boardSize = randomBoard(10, 20);
+const board = new Board(boardSize, boardSize);
+let getCells = document.getElementsByClassName('cell');
+
+let bombs = [];
+let bombCount = 0;
+firstClick = true;
+
+
 function Board(rows, columns) {
     this.height = rows;
     this.width = columns;
-    this.mines = Math.floor((rows * columns) / 6);
+    this.mines = Math.floor((rows * columns) / 4);
 }
 
-const boardSize = 8;
-const board = new Board(boardSize, boardSize);
-bombs = 0;
+function randomBoard(min, max) {
+    var num = Math.floor(Math.random() * (max - min + 1)) + min;
+    return num;
+}
 
 function drawBoard() {
     for (let y = 0; y < board.height; y++) {
-        var row = document.createElement('tr');
-        row.id = "row" + [y];
+        var row = document.createElement('div');
+        row.id = "row" + y;
         row.className = "row"
-        var gameArea = document.getElementById('gameArea');
         gameArea.appendChild(row);
 
         for (let x = 0; x < board.width; x++) {
-            var cell = document.createElement('td');
-            let row = document.getElementById("row" + [y]);
+            var cell = document.createElement('div');
             row.appendChild(cell);
 
             var randoBomb = Math.floor((Math.random() * 10) + 1);
 
-            if (randoBomb < 3 && bombs < board.mines) {
+            if (randoBomb < 3 && bombCount < board.mines) {
+                cell.dataset.state = "bomb";
                 cell.className = "bomb";
-                bombs += 1;
-
+                bombCount += 1;
             } else {
-                cell.className = "cell"
+                cell.dataset.state = "empty";
+                cell.className = "cell";
             }
             cell.dataset.x = x;
             cell.dataset.y = y;
@@ -36,32 +48,49 @@ function drawBoard() {
             cell.addEventListener('click', cellClick);
         }
     }
+
+    bombs = document.getElementsByClassName('bomb');
+}
+drawBoard();
+addNearbyBombCount();
+
+function addNearbyBombCount() {
+    for (let i = 0; i < getCells.length; i++) {
+        let nearbyCells = getCellCoords(Number(getCells[i].dataset.y), Number(getCells[i].dataset.x));
+        getCells[i].dataset.nearbyBombs = nearbyCells.reduce(checkAdjacentBombs, 0);
+    };
 }
 
 function countBombs() {
-    let bombs = document.getElementsByClassName("bomb");
     let bombCounter = document.getElementById("minesRemaining");
     bombCounter.innerHTML = bombs.length;
 
 }
 
-function cellClick() {
+function cellClick(event) {
     let cell = event.target;
-    
-    if (cell.className === "bomb") {
+
+    if (firstClick) {
+        var timeElapsed = setInterval(countTime, 1000);
+        firstClick = false;
+    }
+    if (cell.className.includes("bomb")) {
+        for (let i = 0; i < bombs.length; i++) {
+            bombs[i].style = "background-color: red";
+        }
         cell.style = "background-color: red;"
-        alert("You done fucked up A-A-Ron!")
+        alert("You done fucked up A-A-Ron!");
         return;
     }
 
-    getCellCoords(Number(cell.dataset.y), Number(cell.dataset.x))
-
+    let nearbyCells = getCellCoords(Number(cell.dataset.y), Number(cell.dataset.x));
     
+    nearbyCells.forEach(markNotBomb);
+
 }
 
 function getCellCoords(y, x) {
-    let cells = [
-        {
+    return [{
             x: x,
             y: y,
         },
@@ -91,38 +120,48 @@ function getCellCoords(y, x) {
         },
         {
             x: x - 1,
-            y: y + 1
+            y: y + 1,
         },
         {
             x: x + 1,
             y: y + 1,
         }
     ]
-    cells.forEach(checkType);
 }
 
-function checkType(cell) {
-    let getCells = document.getElementsByClassName('cell');
-    let adjacentBombs = 0;
-
+function markNotBomb(cell) {
     for (let i = 0; i < getCells.length; i++) {
         if (getCells[i].dataset.y == cell.y && getCells[i].dataset.x == cell.x) {
             getCells[i].style = "background-color: white";
-            // getCells[i].innerHTML = bombCount;
+            if (getCells[i].dataset.nearbyBombs > 0 && getCells[i].dataset.state != "bomb") {
+                getCells[i].innerHTML = getCells[i].dataset.nearbyBombs;
+            }
         }
-
     }
+}
+
+function checkAdjacentBombs(bucket, nearbyCellCoords) {
+    let nearbyRow = gameArea.childNodes[nearbyCellCoords.y]
+    if (nearbyRow) {
+        let nearbyCell = nearbyRow.childNodes[nearbyCellCoords.x];
+        if (nearbyCell) {
+            if (nearbyCell.dataset.state === "bomb" ) {
+                return bucket + 1;
+            }   
+        } 
+    }
+    return bucket;
 }
 
 function reset() {
     timeStart = 0;
 }
 
-var timeStart = 0;
+
 
 function countTime() {
     document.getElementById("timePassed").innerHTML = timeStart += 1;
 }
-var timeElapsed = setInterval(countTime, 1000);
-drawBoard();
+
+
 countBombs();
