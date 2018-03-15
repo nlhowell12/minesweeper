@@ -1,6 +1,6 @@
 var gameArea = document.getElementById('gameArea');
-
 var timeStart = 0;
+gameArea.addEventListener('contextmenu', event => event.preventDefault());
 const boardSize = randomBoard(10, 20);
 const board = new Board(boardSize, boardSize);
 let getCells = document.getElementsByClassName('cell');
@@ -45,7 +45,8 @@ function drawBoard() {
             cell.dataset.x = x;
             cell.dataset.y = y;
             cell.style = "background-color: grey;"
-            cell.addEventListener('click', cellClick);
+            cell.addEventListener('click', revealCells);
+            cell.addEventListener('contextmenu', addFlag);
         }
     }
 
@@ -67,14 +68,15 @@ function countBombs() {
 
 }
 
-function cellClick(event) {
+function revealCells(event) {
     let cell = event.target;
 
     if (firstClick) {
         var timeElapsed = setInterval(countTime, 1000);
         firstClick = false;
     }
-    if (cell.className.includes("bomb")) {
+    
+    else if (cell.className.includes("bomb")) {
         for (let i = 0; i < bombs.length; i++) {
             bombs[i].style = "background-color: red";
         }
@@ -87,6 +89,14 @@ function cellClick(event) {
     
     nearbyCells.forEach(markNotBomb);
 
+}
+
+function addFlag(event) {
+    let cell = event.target;
+    let flag = document.createElement('img');
+    flag.src = "./images/flag.png";
+    flag.className = "flag";
+    cell.appendChild(flag);
 }
 
 function getCellCoords(y, x) {
