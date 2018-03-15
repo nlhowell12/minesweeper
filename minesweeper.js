@@ -1,14 +1,14 @@
 var gameArea = document.getElementById('gameArea');
 var timeStart = 0;
-gameArea.addEventListener('contextmenu', event => event.preventDefault());
 const boardSize = randomBoard(10, 20);
 const board = new Board(boardSize, boardSize);
 let getCells = document.getElementsByClassName('cell');
-
 let bombs = [];
 let bombCount = 0;
 firstClick = true;
 
+// turns off the context menu in the game area
+gameArea.addEventListener('contextmenu', event => event.preventDefault());
 
 function Board(rows, columns) {
     this.height = rows;
@@ -75,9 +75,7 @@ function revealCells(event) {
     if (firstClick) {
         var timeElapsed = setInterval(countTime, 1000);
         firstClick = false;
-    }
-    
-    else if (cell.className.includes("bomb")) {
+    } else if (cell.className.includes("bomb")) {
         for (let i = 0; i < bombs.length; i++) {
             bombs[i].style = "background-color: red";
         }
@@ -88,8 +86,9 @@ function revealCells(event) {
 
     let nearbyCells = getCellCoords(Number(cell.dataset.y), Number(cell.dataset.x));
     
+    if (cell.dataset.state === "empty") {
     nearbyCells.forEach(markNotBomb);
-
+    }
 }
 
 function addFlag(event) {
@@ -143,24 +142,25 @@ function getCellCoords(y, x) {
 
 function markNotBomb(cell) {
     for (let i = 0; i < getCells.length; i++) {
-        if (getCells[i].dataset.y == cell.y && getCells[i].dataset.x == cell.x) {
-            getCells[i].style = "background-color: white";
-            if (getCells[i].dataset.nearbyBombs > 0 && getCells[i].dataset.state != "bomb") {
-                getCells[i].innerHTML = getCells[i].dataset.nearbyBombs;
+            if (getCells[i].dataset.y == cell.y && getCells[i].dataset.x == cell.x) {
+                getCells[i].style = "background-color: white";
+                getCells[i].dataset.state = "clicked";
+                if (getCells[i].dataset.nearbyBombs > 0 && getCells[i].dataset.state != "bomb") {
+                    getCells[i].innerHTML = getCells[i].dataset.nearbyBombs;
+                }
             }
         }
     }
-}
 
 function checkAdjacentBombs(bucket, nearbyCellCoords) {
     let nearbyRow = gameArea.childNodes[nearbyCellCoords.y]
     if (nearbyRow) {
         let nearbyCell = nearbyRow.childNodes[nearbyCellCoords.x];
         if (nearbyCell) {
-            if (nearbyCell.dataset.state === "bomb" ) {
+            if (nearbyCell.dataset.state === "bomb") {
                 return bucket + 1;
-            }   
-        } 
+            }
+        }
     }
     return bucket;
 }
