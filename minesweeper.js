@@ -91,7 +91,7 @@ function revealCells(event) {
             getCells[i].removeEventListener('click', revealCells);
         }
         clearInterval(timeElapsed);
-        alert("You done fucked up A-A-Ron!");
+        alert("Boom!");
         return;
     }
 
@@ -101,6 +101,7 @@ function revealCells(event) {
         cell.style = "backgound-image: none"
     nearbyCells.forEach(markNotBomb);
     }
+    setTimeout(checkWin(), 500);
 }
 
 function addFlag(event) {
@@ -180,6 +181,19 @@ function checkAdjacentBombs(bucket, nearbyCellCoords) {
         }
     }
     return bucket;
+}
+
+function checkWin() {
+    let win = 0;
+    for (let i = 0; i < getCells.length; i ++) {
+        if (getCells[i].dataset.state === "empty") {
+            win = 1;
+        }
+    }
+    console.log
+    if (win === 0) {
+        alert("You Win!");
+    }
 }
 
 function countTime() {
