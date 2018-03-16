@@ -6,6 +6,7 @@ let getCells = document.getElementsByClassName('cell');
 let bombs = [];
 let bombCount = 0;
 firstClick = true;
+var originalHTML = document.body.innerHTML;
 
 // turns off the context menu in the game area
 gameArea.addEventListener('contextmenu', event => event.preventDefault());
@@ -170,12 +171,6 @@ function checkAdjacentBombs(bucket, nearbyCellCoords) {
     }
     return bucket;
 }
-
-function reset() {
-    timeStart = 0;
-}
-
-
 
 function countTime() {
     document.getElementById("timePassed").innerHTML = timeStart += 1;
