@@ -79,13 +79,18 @@ function revealCells(event) {
             cell.dataset.state = "empty";
             addNearbyBombCount();
         }
-        var timeElapsed = setInterval(countTime, 1000);
+        timeElapsed = setInterval(countTime, 1000);
         firstClick = false;
     } else if (cell.className.includes("bomb")) {
         cell.style = "background-color: red"
         for (let i = 0; i < bombs.length; i++) {
             bombs[i].style = "background-image: url('./images/mine.png'); background-size: cover"
+            bombs[i].removeEventListener('click', revealCells);
         }
+        for (let i = 0; i < getCells.length; i++) {
+            getCells[i].removeEventListener('click', revealCells);
+        }
+        clearInterval(timeElapsed);
         alert("You done fucked up A-A-Ron!");
         return;
     }
