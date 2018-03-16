@@ -74,6 +74,11 @@ function revealCells(event) {
     let cell = event.target;
 
     if (firstClick) {
+        if (cell.className.includes("bomb")) {
+            cell.className = "cell";
+            cell.dataset.state = "empty";
+            addNearbyBombCount();
+        }
         var timeElapsed = setInterval(countTime, 1000);
         firstClick = false;
     } else if (cell.className.includes("bomb")) {
