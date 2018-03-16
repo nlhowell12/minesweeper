@@ -7,6 +7,7 @@ let bombs = [];
 let bombCount = 0;
 firstClick = true;
 var originalHTML = document.body.innerHTML;
+let resetButton = document.getElementById("resetButton");
 
 // turns off the context menu in the game area
 gameArea.addEventListener('contextmenu', event => event.preventDefault());
@@ -50,7 +51,7 @@ function drawBoard() {
             cell.addEventListener('contextmenu', addFlag);
         }
     }
-
+    resetButton.style = "background-image: url('./images/mineSmile.png'); background-size:cover;"
     bombs = document.getElementsByClassName('bomb');
 }
 drawBoard();
@@ -91,6 +92,7 @@ function revealCells(event) {
             getCells[i].removeEventListener('click', revealCells);
         }
         clearInterval(timeElapsed);
+        resetButton.style = "background-image: url('./images/mineDead.jpg'); background-size:cover;"
         alert("Boom!");
         return;
     }
