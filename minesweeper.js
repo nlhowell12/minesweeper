@@ -200,7 +200,10 @@ function checkAdjacentBombs(bucket, nearbyCellCoords) {
 
 function checkWin() {
     let emptyCells = document.querySelectorAll('[data-state="empty"]')
-    if (!emptyCells.length)  alert("You Win!");
+    if (!emptyCells.length) {
+         alert("You Win!");
+         clearInterval(timeElapsed);
+    }
 }
 
 function countTime() {
