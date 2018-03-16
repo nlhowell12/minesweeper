@@ -68,7 +68,6 @@ function countBombs() {
     let bombCounter = document.getElementById("minesRemaining");
     let findFlags = document.getElementsByClassName('flag');
     bombCounter.innerHTML = bombs.length - findFlags.length;
-
 }
 
 function revealCells(event) {
@@ -98,12 +97,26 @@ function revealCells(event) {
     }
 
     let nearbyCells = getCellCoords(Number(cell.dataset.y), Number(cell.dataset.x));
-    
-    if (cell.dataset.state === "empty") {
+
+    if (cell.dataset.state === "empty" && cell.dataset.nearbyBombs == 0) {
         cell.style = "backgound-image: none"
-    nearbyCells.forEach(markNotBomb);
+        nearbyCells.forEach(function (coord) {
+            const newCell = getElemByCoords(coord);
+            if (newCell && newCell.dataset.nearbyBombs == 0) {
+                newCell.click();
+            }
+        })
+        nearbyCells.forEach(markNotBomb);
+    } else if (cell.dataset.nearbyBombs > 0) {
+        cell.style = "backgound-image: none";
+        cell.innerHTML = cell.dataset.nearbyBombs;
+        cell.dataset.state = "clicked";
     }
-    setTimeout(checkWin(), 500);
+    setTimeout(checkWin, 500);
+}
+
+function getElemByCoords(coords) {
+    return document.querySelector(`[data-x="${coords.x}"][data-y="${coords.y}"]`)
 }
 
 function addFlag(event) {
@@ -111,11 +124,10 @@ function addFlag(event) {
     let flag = document.createElement('img');
     if (cell.className.includes("flag")) {
         cell.parentNode.removeChild(cell);
-    }
-    else {
-    flag.src = "./images/flag.png";
-    flag.className = "flag";
-    cell.appendChild(flag);
+    } else {
+        flag.src = "./images/flag.png";
+        flag.className = "flag";
+        cell.appendChild(flag);
     }
     countBombs();
 }
@@ -160,17 +172,18 @@ function getCellCoords(y, x) {
     ]
 }
 
-function markNotBomb(cell) {
-    for (let i = 0; i < getCells.length; i++) {
-            if (getCells[i].dataset.y == cell.y && getCells[i].dataset.x == cell.x) {
-                getCells[i].style = "background-color: white";
-                getCells[i].dataset.state = "clicked";
-                if (getCells[i].dataset.nearbyBombs > 0 && getCells[i].dataset.state != "bomb") {
-                    getCells[i].innerHTML = getCells[i].dataset.nearbyBombs;
-                }
-            }
-        }
+function markNotBomb(coords) {
+    const cell = getElemByCoords(coords);
+    if (!cell) return;
+
+    cell.style = "background-color: white";
+    cell.dataset.state = "clicked";
+
+    if (Number(cell.dataset.nearbyBombs) > 0 && cell.dataset.state != "bomb") {
+        cell.innerHTML = cell.dataset.nearbyBombs;
     }
+
+}
 
 function checkAdjacentBombs(bucket, nearbyCellCoords) {
     let nearbyRow = gameArea.childNodes[nearbyCellCoords.y]
@@ -186,16 +199,8 @@ function checkAdjacentBombs(bucket, nearbyCellCoords) {
 }
 
 function checkWin() {
-    let win = 0;
-    for (let i = 0; i < getCells.length; i ++) {
-        if (getCells[i].dataset.state === "empty") {
-            win = 1;
-        }
-    }
-    console.log
-    if (win === 0) {
-        alert("You Win!");
-    }
+    let emptyCells = document.querySelectorAll('[data-state="empty"]')
+    if (!emptyCells.length)  alert("You Win!");
 }
 
 function countTime() {
