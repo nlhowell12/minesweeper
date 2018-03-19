@@ -8,6 +8,7 @@ let bombCount = 0;
 firstClick = true;
 var originalHTML = document.body.innerHTML;
 let resetButton = document.getElementById("resetButton");
+let gameOver = false;
 
 // turns off the context menu in the game area
 gameArea.addEventListener('contextmenu', event => event.preventDefault());
@@ -76,13 +77,12 @@ function revealCells(event) {
     if (firstClick) {
         if (cell.className.includes("bomb")) {
             cell.className = "cell";
-            cell.dataset.state = "empty";
+            cell.dataset.state = "clicked";
             addNearbyBombCount();
         }
         timeElapsed = setInterval(countTime, 1000);
         firstClick = false;
     } else if (cell.className.includes("bomb")) {
-        cell.style = "background-color: red"
         for (let i = 0; i < bombs.length; i++) {
             bombs[i].style = "background-image: url('./images/mine.png'); background-size: cover"
             bombs[i].removeEventListener('click', revealCells);
@@ -112,6 +112,7 @@ function revealCells(event) {
         cell.innerHTML = cell.dataset.nearbyBombs;
         cell.dataset.state = "clicked";
     }
+    
     setTimeout(checkWin, 500);
 }
 
@@ -199,10 +200,19 @@ function checkAdjacentBombs(bucket, nearbyCellCoords) {
 }
 
 function checkWin() {
-    let emptyCells = document.querySelectorAll('[data-state="empty"]')
-    if (!emptyCells.length) {
-         alert("You Win!");
+    if (gameOver) return;
+    let clickedCells = document.querySelectorAll('[data-state="clicked"]');
+    if (clickedCells.length + bombs.length === (boardSize * boardSize)) {
          clearInterval(timeElapsed);
+         for (let i = 0; i < bombs.length; i++) {
+            bombs[i].style = "background-image: url('./images/mine.png'); background-size: cover"
+            bombs[i].removeEventListener('click', revealCells);
+        }
+        for (let i = 0; i < getCells.length; i++) {
+            getCells[i].removeEventListener('click', revealCells);
+        }
+        alert("You Win!");
+        gameOver = true;    
     }
 }
 
